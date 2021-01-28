@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>LacmusRetinanetPlugin</AssemblyName>
+        <RootNamespace>LacmusRetinanetPlugin</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
+      <PackageReference Include="TensorFlow.NET" Version="0.32.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Remove="ModelWeights\frozen_inference_graph.pb" />
+        <EmbeddedResource Include="ModelWeights\frozen_inference_graph.pb" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\LacmusBasePlugin\LacmusBasePlugin.csproj">
+        <Private>false</Private>
+        <ExcludeAssets>runtime</ExcludeAssets>
+      </ProjectReference>
+    </ItemGroup>
+</Project>
