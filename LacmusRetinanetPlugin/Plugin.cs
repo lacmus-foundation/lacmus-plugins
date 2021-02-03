@@ -18,9 +18,9 @@ namespace LacmusRetinanetPlugin
             OperatingSystem.WindowsAmd64, 
             OperatingSystem.OsxAmd64
         };
-        public IObjectDetectionModel LoadModel()
+        public IObjectDetectionModel LoadModel(float threshold)
         {
-            return new Model();
+            return new Model(threshold);
         }
     }
 }

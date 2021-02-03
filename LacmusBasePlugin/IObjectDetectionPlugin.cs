@@ -16,6 +16,6 @@ namespace LacmusBasePlugin
         public Version Version { get; }
         public InferenceType InferenceType { get; }
         public HashSet<OperatingSystem> OperatingSystems { get; }
-        public IObjectDetectionModel LoadModel();
+        public IObjectDetectionModel LoadModel(float threshold);
     }
 }

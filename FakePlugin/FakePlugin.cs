@@ -21,7 +21,7 @@ namespace FakePlugin
                 OperatingSystem.WindowsAmd64, 
                 OperatingSystem.OsxAmd64
             };
-        public IObjectDetectionModel LoadModel()
+        public IObjectDetectionModel LoadModel(float threshold)
         {
             return new FakeModel();
         }

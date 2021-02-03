@@ -14,18 +14,19 @@ namespace LacmusRetinanetPlugin
     public class Model : IObjectDetectionModel
     {
         private const string _pbFile = "LacmusRetinanetPlugin.ModelWeights.frozen_inference_graph.pb";
-        private const float _minScore = 0.5f;
         private const string _inputTensorName = "input_1";
         private const string _outputBboxTensorName = "Identity";
         private const string _outputScoreTensorName = "Identity_1";
         private const string _outputLabelsTensorName = "Identity_2";
+        private float _minScore;
         private Graph _graph;
         private Session _session;
 
-        public Model()
+        public Model(float threshold)
         {
             tf.compat.v1.disable_eager_execution();
             _graph = new Graph();
+            _minScore = threshold;
             
             //try to load pb graph from embedded resources
             var assembly = Assembly.GetExecutingAssembly();
