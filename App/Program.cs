@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
@@ -87,6 +89,12 @@ namespace App
                             prediction.YMax,
                             prediction.Score);
                     }
+                    var imageBaseName = Path.GetFileName(imagePath);
+                    var outImagePath = Path.Join(outputDir, imageBaseName);
+                    var outXmlPath = outImagePath + ".xml";
+                    var annotation = DetectionsToAnnotation(predictions, width, height, outImagePath);
+                    File.Copy(imagePath, outImagePath, false);
+                    annotation.SaveToXml(outXmlPath);
                 }
             }
         }
@@ -116,7 +124,38 @@ namespace App
                     Console.WriteLine("\tInference Type: {0}", plugin.InferenceType);
                 }
             }
-        } 
+        }
+
+        static Annotation DetectionsToAnnotation(IEnumerable<IObject> detections, int width, int height, string outName)
+        {
+            var annotation = new Annotation
+            {
+                Filename = Path.GetFileName(outName),
+                Folder = Path.GetDirectoryName(outName),
+                Objects = new List<Object>(),
+                Size = new Size
+                {
+                    Height = height,
+                    Width = width
+                }
+            };
+            foreach (var detection in detections)
+            {
+                var o = new Object
+                {
+                    Name = detection.Label,
+                    Box = new Box
+                    {
+                        Xmax = detection.XMax,
+                        Xmin = detection.XMin,
+                        Ymax = detection.YMax,
+                        Ymin = detection.YMin
+                    }
+                };
+                annotation.Objects.Add(o);
+            }
+            return annotation;
+        }
         static void Main(string[] args)
         {
             var options = new InferOptions();

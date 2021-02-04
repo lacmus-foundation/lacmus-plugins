@@ -101,26 +101,70 @@ namespace LacmusRetinanetPlugin
             var filteredObjects = new List<IObject>();
             for (int i = 0; i < scores.size; i++)
             {
-                float score = scores.MoveNext();
-                if (score > _minScore)
+                var score = scores.MoveNext();
+                if (score < _minScore) 
+                    continue;
+
+                var isMerged = false;
+                var xMin = boxes[i * 4] / scale;
+                var yMin = boxes[i * 4 + 1] / scale;
+                var xMax = boxes[i * 4 + 2] / scale;
+                var yMax = boxes[i * 4 + 3] / scale;
+                var label = "Pedestrian";
+                var obj = new DetectedObject
                 {
-                    float xMin = boxes[i * 4] / scale;
-                    float yMin = boxes[i * 4 + 1] / scale;
-                    float xMax = boxes[i * 4 + 2] / scale;
-                    float yMax = boxes[i * 4 + 3] / scale;
-                    string label = "Pedestrian";
-                    var obj = new DetectedObject
+                    Label = label,
+                    Score = score,
+                    XMin = (int)xMin,
+                    XMax = (int)xMax,
+                    YMin = (int)yMin,
+                    YMax = (int)yMax
+                };
+                
+                foreach (var res in filteredObjects)
+                {
+                    if (res.Label != obj.Label)
+                        continue;
+                    if (res.XMin <= obj.XMin && res.XMax >= obj.XMin)
                     {
-                        Label = label,
-                        Score = score,
-                        XMin = (int)xMin,
-                        XMax = (int)xMax,
-                        YMin = (int)yMin,
-                        YMax = (int)yMax
-                    };
-                    filteredObjects.add(obj);
-                    //TODO: implement NMS filter
+                        res.XMax = Math.Max(res.XMax, obj.XMax);
+                        isMerged = true;
+                    }
+                    if (res.XMin <= obj.XMax && res.XMax >= obj.XMax)
+                    {
+                        res.XMin = Math.Min(res.XMin, obj.XMin);
+                        isMerged = true;
+                    }
+
+                    if (res.YMin <= obj.YMin && res.YMax >= obj.YMin)
+                    {
+                        res.YMax = Math.Max(res.YMax, obj.YMax);
+                        isMerged = true;
+                    }
+                    if (res.YMin <= obj.YMax && res.YMax >= obj.YMax)
+                    {
+                        res.YMin = Math.Min(res.YMin, obj.YMin);
+                        isMerged = true;
+                    }
+
+                    if (obj.XMin <= res.XMin && obj.XMax >= res.XMax)
+                    {
+                        res.XMin = Math.Min(res.XMin, obj.XMin);
+                        res.XMax = Math.Max(res.XMax, obj.XMax);
+                        isMerged = true;
+                    }
+                    if (obj.YMin <= res.YMin && obj.YMax >= res.YMax)
+                    {
+                        res.YMin = Math.Min(res.YMin, obj.YMin);
+                        res.YMax = Math.Max(res.YMax, obj.YMax);
+                        isMerged = true;
+                    }
+
+                    if (isMerged)
+                        res.Score = Math.Max(res.Score, obj.Score);
                 }
+                if (!isMerged)
+                    filteredObjects.add(obj);
             }
             return filteredObjects;
         }
