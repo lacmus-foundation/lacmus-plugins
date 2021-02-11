@@ -93,7 +93,7 @@ namespace App
                     var outImagePath = Path.Join(outputDir, imageBaseName);
                     var outXmlPath = outImagePath + ".xml";
                     var annotation = DetectionsToAnnotation(predictions, width, height, outImagePath);
-                    File.Copy(imagePath, outImagePath, false);
+                    File.Copy(imagePath, outImagePath, true);
                     annotation.SaveToXml(outXmlPath);
                 }
             }
@@ -122,6 +122,12 @@ namespace App
                     Console.WriteLine("\tUrl: {0}", plugin.Url);
                     Console.WriteLine("\tVersion: {0}", plugin.Version.ToString());
                     Console.WriteLine("\tInference Type: {0}", plugin.InferenceType);
+                    var operatingSystems = "";
+                    foreach (var os in plugin.OperatingSystems)
+                    {
+                        operatingSystems += os + " ";
+                    }
+                    Console.WriteLine("\tSupported Platforms: {0}", operatingSystems);
                 }
             }
         }
