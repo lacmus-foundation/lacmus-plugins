@@ -19,7 +19,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="SciSharp.TensorFlow.Redist" Version="1.15.1" />
+      <PackageReference Include="LacmusPlugin.Natives.TensorFlow.DirectML" Version="1.15.4" />
       <PackageReference Include="TensorFlow.NET" Version="0.20.1" />
     </ItemGroup>
 </Project>
