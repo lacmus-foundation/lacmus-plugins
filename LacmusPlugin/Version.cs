@@ -1,4 +1,4 @@
-namespace LacmusBasePlugin
+namespace LacmusPlugin
 {
     public readonly struct Version
     {

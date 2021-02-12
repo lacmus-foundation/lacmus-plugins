@@ -17,7 +17,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\LacmusBasePlugin\LacmusBasePlugin.csproj">
+      <ProjectReference Include="..\LacmusPlugin\LacmusPlugin.csproj">
         <Private>false</Private>
         <ExcludeAssets>runtime</ExcludeAssets>
       </ProjectReference>

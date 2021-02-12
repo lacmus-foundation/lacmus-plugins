@@ -1,4 +1,4 @@
-using LacmusBasePlugin;
+using LacmusPlugin;
 
 namespace LacmusRetinanetPlugin
 {

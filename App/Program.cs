@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
-using LacmusBasePlugin;
+using LacmusPlugin;
 using MetadataExtractor;
 using Directory = System.IO.Directory;
 

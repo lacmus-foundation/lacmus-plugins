@@ -1,7 +1,7 @@
 #!/bin/bash
 rm -rf ./build && \
 rm -rf ./App/bin/Release/ \
-rm -rf ./LacmusBasePlugin/bin/Release/ \
+rm -rf ./LacmusPlugin/bin/Release/ \
 rm -rf ./LacmusRetinanetPlugin/bin/Release/
 echo "restoring packeges\n"
 dotnet restore

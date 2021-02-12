@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{B5E0D68F-A7FD-4ED5-B8D8-C91B917E146B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusBasePlugin", "LacmusBasePlugin\LacmusBasePlugin.csproj", "{3584EDB6-A283-4FEB-BFC6-36B5AC14250B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusPlugin", "LacmusPlugin\LacmusPlugin.csproj", "{3584EDB6-A283-4FEB-BFC6-36B5AC14250B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakePlugin", "FakePlugin\FakePlugin.csproj", "{52A212CB-7F4A-4B88-AEB7-513CDC9BB911}"
 EndProject

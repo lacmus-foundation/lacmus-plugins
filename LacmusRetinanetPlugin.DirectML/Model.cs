@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using LacmusBasePlugin;
+using LacmusPlugin;
 using NumSharp;
 using Tensorflow;
 using static Tensorflow.Binding;

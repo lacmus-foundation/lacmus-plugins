@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using LacmusBasePlugin.Enums;
+using LacmusPlugin.Enums;
 
-namespace LacmusBasePlugin
+namespace LacmusPlugin
 {
     public interface IObjectDetectionPlugin
     {

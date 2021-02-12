@@ -1,4 +1,4 @@
-namespace LacmusBasePlugin.Enums
+namespace LacmusPlugin.Enums
 {
     public enum InferenceType
     {

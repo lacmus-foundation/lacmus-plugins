@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using LacmusBasePlugin;
-using LacmusBasePlugin.Enums;
+using LacmusPlugin;
+using LacmusPlugin.Enums;
 
 namespace LacmusRetinanetPlugin
 {

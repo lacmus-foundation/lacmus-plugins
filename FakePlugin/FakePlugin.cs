@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using LacmusBasePlugin;
-using LacmusBasePlugin.Enums;
-using OperatingSystem = LacmusBasePlugin.OperatingSystem;
-using Version = LacmusBasePlugin.Version;
+using LacmusPlugin;
+using LacmusPlugin.Enums;
+using OperatingSystem = LacmusPlugin.OperatingSystem;
+using Version = LacmusPlugin.Version;
 
 
 namespace FakePlugin
