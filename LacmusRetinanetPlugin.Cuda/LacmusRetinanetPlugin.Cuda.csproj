@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>LacmusRetinanetPlugin.Cuda</AssemblyName>
+        <RootNamespace>LacmusRetinanetPlugin.Cuda</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SciSharp.TensorFlow.Redist-Linux-GPU" Version="2.3.1" />
+      <PackageReference Include="SciSharp.TensorFlow.Redist-Windows-GPU" Version="2.3.1" />
+      <PackageReference Include="TensorFlow.NET" Version="0.33.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Remove="ModelWeights\frozen_inference_graph.pb" />
+        <EmbeddedResource Include="ModelWeights\frozen_inference_graph.pb" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\LacmusPlugin\LacmusPlugin.csproj">
+        <Private>false</Private>
+        <ExcludeAssets>runtime</ExcludeAssets>
+      </ProjectReference>
+    </ItemGroup>
+</Project>

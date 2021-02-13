@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusRetinanetPlugin", "La
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusRetinanetPlugin.DirectML", "LacmusRetinanetPlugin.DirectML\LacmusRetinanetPlugin.DirectML.csproj", "{60C433A1-9341-40ED-AA78-43D62BA3BEDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusRetinanetPlugin.Cuda", "LacmusRetinanetPlugin.Cuda\LacmusRetinanetPlugin.Cuda.csproj", "{5E41A63B-F684-43E8-8416-65FC0CF8B914}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{60C433A1-9341-40ED-AA78-43D62BA3BEDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60C433A1-9341-40ED-AA78-43D62BA3BEDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60C433A1-9341-40ED-AA78-43D62BA3BEDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
