@@ -6,9 +6,11 @@ namespace LacmusRetinanetPlugin.Cuda
 {
     public class Plugin : IObjectDetectionPlugin
     {
+        public string Tag => "LacmusRetinanetPlugin.Cuda";
         public string Name => "Lacmus Retinanet";
         public string Description => "Resnet50+deepFPN neural network";
-        public string Author => "Lacmus Foundation";
+        public string Author => "gosha20777";
+        public string Company => "Lacmus Foundation";
         public string Url => "https://github.com/lacmus-foundation/lacmus";
         public Version Version => new Version(api: 2, major: 1, minor: 0);
         public InferenceType InferenceType => InferenceType.CudaGpu;

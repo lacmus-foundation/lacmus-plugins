@@ -9,9 +9,11 @@ namespace FakePlugin
 {
     public class FakePlugin : IObjectDetectionPlugin
     {
+        public string Tag => "FakePlugin.Cpu";
         public string Name => "Fake Plugin";
         public string Description => "Fake Description";
         public string Author => "Fake Author";
+        public string Company => "Fake Company";
         public string Url => "http://fake-url";
         public Version Version => new Version(api: 2, major: 1, minor: 0);
         public InferenceType InferenceType => InferenceType.Cpu;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
+using JetBrains.Profiler.SelfApi;
 using LacmusPlugin;
 using MetadataExtractor;
 using Directory = System.IO.Directory;
@@ -12,6 +13,17 @@ namespace App
 {
     static class Program
     {
+        private static List<IObjectDetectionPlugin> _plugins;
+
+        static void InferUntilExit(InferOptions options)
+        {
+            var command = "";
+            while (command?.ToLower() != "q")
+            {
+                Infer(options);
+                command = Console.ReadLine();
+            }
+        }
         static void Infer(InferOptions options)
         {
             if (!Directory.Exists(options.InputDir))
@@ -25,12 +37,11 @@ namespace App
                 Console.WriteLine("Invalid output directory {0}", options.OutputDir);
                 return;
             }
-            var pluginsDir = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plugins");
-            var pm = new PluginManager(pluginsDir);
+            
             IObjectDetectionPlugin plugin;
             try
             {
-                plugin = pm.FindPlugins()[options.PluginName];
+                plugin = _plugins[options.PluginName];
             }
             catch
             {
@@ -97,24 +108,21 @@ namespace App
                     annotation.SaveToXml(outXmlPath);
                 }
             }
+            DotMemory.GetSnapshot();
         }
         static void ShowPlugins(ShowOptions options)
         {
-            var pluginsDir = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plugins");
-            var pm = new PluginManager(pluginsDir);
-            Console.Write("Searching plugins in {0} ...", pluginsDir);
-            var plugins = pm.FindPlugins();
             Console.WriteLine("Available plugins:");
             if (options.ShowAll == false)
-                for (var i = 0; i < plugins.Count; i++)
+                for (var i = 0; i < _plugins.Count; i++)
                 {
-                    Console.WriteLine("[{0}]: {1} - {2}", i, plugins[i].Name, plugins[i].InferenceType);
+                    Console.WriteLine("[{0}]: {1} - {2}", i, _plugins[i].Name, _plugins[i].InferenceType);
                 }
             else
             {
-                for (var i = 0; i < plugins.Count; i++)
+                for (var i = 0; i < _plugins.Count; i++)
                 {
-                    var plugin = plugins[i];
+                    var plugin = _plugins[i];
                     Console.WriteLine("Plugin {0} info:", i);
                     Console.WriteLine("\tName: {0}", plugin.Name);
                     Console.WriteLine("\tAuthor: {0}", plugin.Author);
@@ -166,9 +174,20 @@ namespace App
         {
             var options = new InferOptions();
             var showOptions = new ShowOptions();
+            DotMemory.EnsurePrerequisite();
+            var config = new DotMemory.Config();
+            config.SaveToDir("/home/gosha20777/Documents/projects/lacmus-plugins/mem-profiling");
+            DotMemory.Attach(config);
+            
+            var pluginsDir = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+            var pm = new PluginManager(pluginsDir);
+            _plugins = pm.FindPlugins();
+            pm = null;
+            
             Parser.Default.ParseArguments<InferOptions, ShowOptions>(args)
-                .WithParsed<InferOptions>(Infer)
+                .WithParsed<InferOptions>(InferUntilExit)
                 .WithParsed<ShowOptions>(ShowPlugins);
+            DotMemory.Detach();
         }
     }
 }

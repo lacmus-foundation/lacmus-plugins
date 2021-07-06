@@ -1,8 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>LacmusPlugin</RootNamespace>
+        <AssemblyName>LacmusPlugin</AssemblyName>
+        <PackageId>LacmusPlugin</PackageId>
+        <Version>2.0.2</Version>
+        <Authors>Lacmus Foundation</Authors>
+        <Company>Lacmus Foundation</Company>
+        <RepositoryUrl>https://github.com/lacmus-foundation/lacmus-plugins</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Description>
+            Base Libary to create plugins for Lacmus Application
+        </Description>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+        <PackageProjectUrl>https://github.com/lacmus-foundation/lacmus-plugins</PackageProjectUrl>
+        <PackageTags>plugins;lacmus</PackageTags>
+        <PackageOutputPath>../packages</PackageOutputPath>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageVersion>2.0.2</PackageVersion>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
 </Project>

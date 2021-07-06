@@ -9,9 +9,11 @@ namespace LacmusPlugin
 {
     public interface IObjectDetectionPlugin
     {
+        public string Tag { get; }
         public string Name { get; }
         public string Description { get; }
         public string Author { get; }
+        public string Company { get; }
         public string Url { get; }
         public Version Version { get; }
         public InferenceType InferenceType { get; }

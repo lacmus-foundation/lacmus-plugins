@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <AssemblyName>LacmusRetinanetPlugin</AssemblyName>
         <RootNamespace>LacmusRetinanetPlugin</RootNamespace>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
-      <PackageReference Include="TensorFlow.NET" Version="0.32.0" />
+      <PackageReference Include="TensorFlow.NET" Version="0.33.0" />
     </ItemGroup>
     
     <ItemGroup>

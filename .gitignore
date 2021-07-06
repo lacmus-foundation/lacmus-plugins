@@ -40,3 +40,4 @@ msbuild.wrn
 *.pb
 *.onnx
 *.pth
+packages/
