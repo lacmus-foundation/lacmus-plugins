@@ -14,75 +14,110 @@ namespace LacmusRetinanetPlugin.DirectML
     public class Model : IObjectDetectionModel
     {
         private const string _pbFile = "LacmusRetinanetPlugin.DirectML.ModelWeights.frozen_inference_graph.pb";
-        private const string _inputTensorName = "input_1";
-        private const string _outputBboxTensorName = "filtered_detections/map/TensorArrayStack/TensorArrayGatherV3";
-        private const string _outputScoreTensorName = "filtered_detections/map/TensorArrayStack_1/TensorArrayGatherV3";
-        private const string _outputLabelsTensorName = "filtered_detections/map/TensorArrayStack_2/TensorArrayGatherV3";
-        private float _minScore;
+        private readonly float _minScore;
         private Graph _graph;
+        private Graph _preprocessingGraph;
         private Session _session;
+        private Session _preprocessingSession;
+        
+        private readonly Tensor _inputModelTensor;
+        private readonly Tensor[] _outputModelTensors;
+        private readonly Tensor _inputPreprocessTensor;
+        private readonly Tensor _outputPreprocessTensor;
+        private readonly Tensor _imageSizeTensor;
 
         public Model(float threshold)
         {
             tf.compat.v1.disable_eager_execution();
-            _graph = new Graph();
             _minScore = threshold;
             
-            //try to load pb graph from embedded resources
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(_pbFile))
+            _graph = LoadModelGraph(_pbFile);
+            _preprocessingGraph = BuildPreprocessingGraph();
+
+            _session = tf.Session(_graph);
+            _preprocessingSession = tf.Session(_preprocessingGraph);
+            
+            _inputModelTensor = _graph.OperationByName("input_1");
+            _outputModelTensors = new Tensor[]
             {
-                using (var ms = new MemoryStream())
-                {
-                    stream?.CopyTo(ms);
-                    Console.WriteLine(ms.Length);
-                    var isOk = _graph.Import(ms.ToArray());
-                    Console.WriteLine(isOk);
-                    if(!isOk || _graph.ToArray().Length == 0)
-                        throw new Exception("unable to import graph");
-                    _session = tf.Session(_graph);
-                }
-            }
+                _graph.OperationByName("filtered_detections/map/TensorArrayStack/TensorArrayGatherV3"),
+                _graph.OperationByName("filtered_detections/map/TensorArrayStack_1/TensorArrayGatherV3"),
+                _graph.OperationByName("filtered_detections/map/TensorArrayStack_2/TensorArrayGatherV3")
+            };
+
+            _inputPreprocessTensor = _preprocessingGraph.get_operation_by_name("input");
+            _outputPreprocessTensor = _preprocessingGraph.get_operation_by_name("output");
+            _imageSizeTensor = _preprocessingGraph.get_operation_by_name("size");
         }
-        
+
         public IEnumerable<IObject> Infer(string imagePath, int width, int height)
         {
             var startTime = DateTime.Now;
-            var imgArr = PreprocessImage(imagePath, width, height, out var scale);
-            Console.WriteLine("Preprocess image at {0} s", DateTime.Now - startTime);
-            _graph = _graph.as_default();
-            Tensor inputTensor = _graph.OperationByName(_inputTensorName);
-            Tensor tensorBoxes = _graph.OperationByName(_outputBboxTensorName);
-            Tensor tensorScores = _graph.OperationByName(_outputScoreTensorName);
-            Tensor tensorLabels = _graph.OperationByName(_outputLabelsTensorName);
-            Tensor[] outTensorArr = new Tensor[] { tensorBoxes, tensorScores, tensorLabels };
-            var results = _session.run(outTensorArr, new FeedItem(inputTensor, imgArr));
+            var scale = ComputeImageScale(width, height);
+            var size = np.array((int) (height * scale), (int) (width * scale));
+            
+            _preprocessingGraph.as_default();
+            var inputFeed = new FeedItem(_inputPreprocessTensor, imagePath);
+            var sizeFeed = new FeedItem(_imageSizeTensor, size);
+            var imgArr = _preprocessingSession.run(_outputPreprocessTensor, inputFeed, sizeFeed);
+            _graph.as_default();
+            var results = _session.run(_outputModelTensors, new FeedItem(_inputModelTensor, imgArr));
             return FilterDetections(results, scale);
         }
+
         public async Task<IEnumerable<IObject>> InferAsync(string imagePath, int width, int height)
         {
             return await Task.Run(() => Infer(imagePath, width, height));
         }
         public void Dispose()
         {
+            _session.graph.Dispose();
+            //_session.close();
+            _session.__del__();
             _session.Dispose();
+            
+            _preprocessingSession.graph.Dispose();
+            //_preprocessingSession.close();
+            _preprocessingSession.__del__();
+            _preprocessingSession.Dispose();
+            
             _graph.Dispose();
-            GC.Collect();
+            _graph = null;
+            _preprocessingGraph = null;
+            tf.reset_default_graph();
+        }
+
+        private Graph LoadModelGraph(string pbFileName)
+        {
+            //try to load pb graph from embedded resources
+            Graph graph = new Graph();
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(pbFileName))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    stream?.CopyTo(ms);
+                    var isOk = graph.Import(ms.ToArray());
+                    if(!isOk || graph.ToArray().Length == 0)
+                        throw new Exception("unable to import graph");
+                }
+            }
+            return graph;
         }
         
-        private NDArray PreprocessImage(string imagePath, int width, int height, out float scale)
+        private Graph BuildPreprocessingGraph()
         {
-            scale = ComputeImageScale(width, height);
-            var size = np.array((int)(height * scale), (int)(width * scale));
-            var fileReader = tf.io.read_file(imagePath, "file_reader");
+            var namePlaceholder = tf.placeholder(TF_DataType.TF_STRING, name: "input");
+            var size = tf.placeholder(TF_DataType.TF_INT32, new TensorShape(2), name: "size");
+            var fileReader = tf.io.read_file(namePlaceholder, name:"file_reader");
             var decodeJpeg = tf.image.decode_jpeg(fileReader, channels: 3, name: "DecodeJpeg", dct_method: "INTEGER_ACCURATE");
-            var casted = tf.cast(decodeJpeg, TF_DataType.TF_FLOAT);
-            var castedBgr = tf.reverse(casted, axis: np.array(-1));
-            var std = tf.constant(np.array(103.939f, 116.779f, 123.68f));
-            var castedBgrNormalized = tf.sub(castedBgr, std);
-            var dimsExpander = tf.expand_dims(castedBgrNormalized, 0);
-            var resizeJpeg = tf.image.resize_bilinear(dimsExpander, size, half_pixel_centers: true);
-            return resizeJpeg.eval();
+            var casted = tf.cast(decodeJpeg, TF_DataType.TF_FLOAT, name: "cast");
+            var castedBgr = tf.reverse(casted, axis: np.array(-1), name: "cast_bgr");
+            var std = tf.constant(np.array(103.939f, 116.779f, 123.68f), name: "std");
+            var castedBgrNormalized = tf.sub(castedBgr, std, name: "normalized");
+            var dimsExpander = tf.expand_dims(castedBgrNormalized, 0, name: "dims_expander");
+            var resizeJpeg = tf.image.resize_bilinear(dimsExpander, size, half_pixel_centers: true, name: "output");
+            return resizeJpeg.graph;
         }
         private float ComputeImageScale(int width, int height, int minSide = 2100, int maxSide = 2100)
         {

@@ -85,12 +85,6 @@ namespace LacmusRetinanetPlugin
             _graph = null;
             _preprocessingGraph = null;
             tf.reset_default_graph();
-            
-            var bytes = GC.GetTotalAllocatedBytes(true);
-            Console.WriteLine(bytes);
-            //GC.RemoveMemoryPressure(bytes);
-            //GC.Collect(GC.MaxGeneration);
-            //GC.SuppressFinalize(this);
         }
 
         private Graph LoadModelGraph(string pbFileName)
