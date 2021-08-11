@@ -19,7 +19,7 @@
         <PackageTags>plugins;lacmus</PackageTags>
         <PackageOutputPath>../packages</PackageOutputPath>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageVersion>2.0.2</PackageVersion>
+        <PackageVersion>2.0.3</PackageVersion>
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 

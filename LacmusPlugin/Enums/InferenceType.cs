@@ -6,6 +6,7 @@ namespace LacmusPlugin.Enums
         CudaGpu = 20,
         AmdGpu = 21,
         AnyGpu = 22,
-        GoogleTpu = 30
+        GoogleTpu = 30,
+        OpenVinoNpu = 40
     }
 }

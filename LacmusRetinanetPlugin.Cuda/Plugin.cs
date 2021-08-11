@@ -12,7 +12,8 @@ namespace LacmusRetinanetPlugin.Cuda
         public string Author => "gosha20777";
         public string Company => "Lacmus Foundation";
         public string Url => "https://github.com/lacmus-foundation/lacmus";
-        public Version Version => new Version(api: 2, major: 1, minor: 0);
+        public IEnumerable<string> Dependences => new[] {"CUDA == 10.1", "CuDNN == 7.6"};
+        public Version Version => new Version(api: 2, major: 5, minor: 0);
         public InferenceType InferenceType => InferenceType.CudaGpu;
         public HashSet<OperatingSystem> OperatingSystems => new HashSet<OperatingSystem>()
         {
