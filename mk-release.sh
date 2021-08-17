@@ -3,6 +3,8 @@ rm -rf ./build && \
 rm -rf ./App/bin/Release/ \
 rm -rf ./LacmusPlugin/bin/Release/ \
 rm -rf ./LacmusRetinanetPlugin/bin/Release/
+rm -rf ./LacmusRetinanetPlugin.Cuda/bin/Release/
+rm -rf ./LacmusRetinanetPlugin.DirectML/bin/Release/
 echo "restoring packeges\n"
 dotnet restore
 echo -n "building for linux\n"
@@ -17,6 +19,9 @@ echo -n "building lacmus plugin [cuda]\n"
 dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusRetinanetPlugin.Cuda LacmusRetinanetPlugin.Cuda/LacmusRetinanetPlugin.Cuda.csproj
 echo -n "building lacmus plugin [direct-ml]\n"
 dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusRetinanetPlugin.DirectML LacmusRetinanetPlugin.DirectML/LacmusRetinanetPlugin.DirectML.csproj
+
+mkdir ./build/app/linux_amd64/plugins
+cp -r ./build/plugins/LacmusRetinanetPlugin.Cuda ./build/app/linux_amd64/plugins/LacmusRetinanetPlugin.Cuda
 #cd ./bin/app/
 #zip -r -9 ./linux.zip ./linux/
 #zip -r -9 ./win10.zip ./win10/

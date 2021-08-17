@@ -35,7 +35,17 @@ namespace LacmusRetinanetPlugin.Cuda
             _graph = LoadModelGraph(_pbFile);
             _preprocessingGraph = BuildPreprocessingGraph();
 
-            _session = tf.Session(_graph);
+            //_session = tf.Session(_graph);
+            //_session = tf.Session();
+            _session = tf.Session(_graph, 
+                new ConfigProto
+                {
+                    GpuOptions = new GPUOptions
+                    {
+                        AllowGrowth = true,
+                        PerProcessGpuMemoryFraction = 0.6
+                    }
+                });
             _preprocessingSession = tf.Session(_preprocessingGraph);
             
             _inputModelTensor = _graph.OperationByName("input_1");
@@ -120,7 +130,7 @@ namespace LacmusRetinanetPlugin.Cuda
             var resizeJpeg = tf.image.resize_bilinear(dimsExpander, size, half_pixel_centers: true, name: "output");
             return resizeJpeg.graph;
         }
-        private float ComputeImageScale(int width, int height, int minSide = 2100, int maxSide = 2100)
+        private float ComputeImageScale(int width, int height, int minSide = 1500, int maxSide = 2000)
         {
             var smallestSide = Math.Min(width, height);
             var scale = minSide / (float)smallestSide;
@@ -129,6 +139,7 @@ namespace LacmusRetinanetPlugin.Cuda
             {
                 scale = maxSide / (float)largestSide;
             }
+            Console.WriteLine(scale);
             return scale;
         } 
         private IEnumerable<IObject> FilterDetections(NDArray[] resultArr, float scale)

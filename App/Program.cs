@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
-using JetBrains.Profiler.SelfApi;
 using LacmusPlugin;
 using MetadataExtractor;
 using Directory = System.IO.Directory;
@@ -14,16 +13,6 @@ namespace App
     static class Program
     {
         private static List<IObjectDetectionPlugin> _plugins;
-
-        static void InferUntilExit(InferOptions options)
-        {
-            var command = "";
-            while (command?.ToLower() != "q")
-            {
-                Infer(options);
-                command = Console.ReadLine();
-            }
-        }
         static void Infer(InferOptions options)
         {
             if (!Directory.Exists(options.InputDir))
@@ -108,7 +97,6 @@ namespace App
                     annotation.SaveToXml(outXmlPath);
                 }
             }
-            DotMemory.GetSnapshot();
         }
         static void ShowPlugins(ShowOptions options)
         {
@@ -174,10 +162,6 @@ namespace App
         {
             var options = new InferOptions();
             var showOptions = new ShowOptions();
-            DotMemory.EnsurePrerequisite();
-            var config = new DotMemory.Config();
-            config.SaveToDir("/home/gosha20777/Documents/projects/lacmus-plugins/mem-profiling");
-            DotMemory.Attach(config);
             
             var pluginsDir = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plugins");
             var pm = new PluginManager(pluginsDir);
@@ -185,9 +169,8 @@ namespace App
             pm = null;
             
             Parser.Default.ParseArguments<InferOptions, ShowOptions>(args)
-                .WithParsed<InferOptions>(InferUntilExit)
+                .WithParsed<InferOptions>(Infer)
                 .WithParsed<ShowOptions>(ShowPlugins);
-            DotMemory.Detach();
         }
     }
 }
