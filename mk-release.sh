@@ -19,9 +19,15 @@ echo -n "building lacmus plugin [cuda]\n"
 dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusRetinanetPlugin.Cuda LacmusRetinanetPlugin.Cuda/LacmusRetinanetPlugin.Cuda.csproj
 echo -n "building lacmus plugin [direct-ml]\n"
 dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusRetinanetPlugin.DirectML LacmusRetinanetPlugin.DirectML/LacmusRetinanetPlugin.DirectML.csproj
+echo -n "building lacmus yolo plugin [cpu]\n"
+dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusYolo5Plugin.Cpu LacmusYolo5Plugin/LacmusYolo5Plugin.csproj
+echo -n "building lacmus yolo plugin [cuda]\n"
+dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusYolo5Plugin.Cuda LacmusYolo5Plugin.Cuda/LacmusYolo5Plugin.Cuda.csproj
+echo -n "building lacmus yolo plugin [direct-ml]\n"
+dotnet publish --framework net5.0 -c Release -o ./build/plugins/LacmusYolo5Plugin.DirectML LacmusYolo5Plugin.DirectML/LacmusYolo5Plugin.DirectML.csproj
 
-mkdir ./build/app/linux_amd64/plugins
-cp -r ./build/plugins/LacmusRetinanetPlugin.Cuda ./build/app/linux_amd64/plugins/LacmusRetinanetPlugin.Cuda
+#mkdir ./build/app/linux_amd64/plugins
+#cp -r ./build/plugins/LacmusYolo5Plugin.Cuda ./build/app/linux_amd64/plugins/LacmusYolo5Plugin.Cuda
 #cd ./bin/app/
 #zip -r -9 ./linux.zip ./linux/
 #zip -r -9 ./win10.zip ./win10/

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>LacmusYolo5Plugin.DirectML</AssemblyName>
+        <RootNamespace>LacmusYolo5Plugin.DirectML</RootNamespace>
+        <LangVersion>9</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="ModelWeights\frozen_inference_graph.pb" />
+        <EmbeddedResource Include="ModelWeights\frozen_inference_graph.pb" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\LacmusPlugin\LacmusPlugin.csproj">
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="LacmusPlugin.Natives.TensorFlow.DirectML" Version="1.15.4" />
+        <PackageReference Include="TensorFlow.NET" Version="0.20.1" />
+    </ItemGroup>
+</Project>

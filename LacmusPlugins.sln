@@ -12,6 +12,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusRetinanetPlugin.Direc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusRetinanetPlugin.Cuda", "LacmusRetinanetPlugin.Cuda\LacmusRetinanetPlugin.Cuda.csproj", "{5E41A63B-F684-43E8-8416-65FC0CF8B914}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusYolo5Plugin", "LacmusYolo5Plugin\LacmusYolo5Plugin.csproj", "{0425CA6D-4A89-4300-A8A4-88826DFE3640}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusYolo5Plugin.Cuda", "LacmusYolo5Plugin.Cuda\LacmusYolo5Plugin.Cuda.csproj", "{000D4DC9-8E48-474C-956A-86A5F918EF6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LacmusYolo5Plugin.DirectML", "LacmusYolo5Plugin.DirectML\LacmusYolo5Plugin.DirectML.csproj", "{AA192D96-11E5-4D9F-AFE7-D7AFF7168F3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +48,17 @@ Global
 		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E41A63B-F684-43E8-8416-65FC0CF8B914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0425CA6D-4A89-4300-A8A4-88826DFE3640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0425CA6D-4A89-4300-A8A4-88826DFE3640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0425CA6D-4A89-4300-A8A4-88826DFE3640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0425CA6D-4A89-4300-A8A4-88826DFE3640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{000D4DC9-8E48-474C-956A-86A5F918EF6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000D4DC9-8E48-474C-956A-86A5F918EF6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000D4DC9-8E48-474C-956A-86A5F918EF6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000D4DC9-8E48-474C-956A-86A5F918EF6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA192D96-11E5-4D9F-AFE7-D7AFF7168F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA192D96-11E5-4D9F-AFE7-D7AFF7168F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA192D96-11E5-4D9F-AFE7-D7AFF7168F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA192D96-11E5-4D9F-AFE7-D7AFF7168F3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
