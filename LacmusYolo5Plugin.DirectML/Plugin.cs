@@ -13,7 +13,7 @@ namespace LacmusYolo5Plugin.DirectML
         public string Company => "Lacmus Foundation";
         public string Url => "https://github.com/lacmus-foundation/lacmus-research";
         public IEnumerable<string> Dependences => new[] {"DirectX >= 12.1"};
-        public Version Version => new Version(api: 2, major: 1, minor: 0);
+        public Version Version => new Version(api: 2, major: 1, minor: 1);
         public InferenceType InferenceType => InferenceType.AnyGpu;
         public HashSet<OperatingSystem> OperatingSystems => new HashSet<OperatingSystem>()
         {

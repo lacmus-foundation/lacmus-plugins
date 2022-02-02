@@ -144,7 +144,7 @@ namespace LacmusYolo5Plugin
             var validDetections = np.squeeze(resultArr[3]).AsIterator<int>().MoveNext();
             var filteredObjects = new List<IObject>();
             
-            for (int i = 0; i < validDetections; i++)
+            for (var i = 0; i < validDetections; i++)
             {
                 var score = scores[i];
                 if (score < _minScore)
