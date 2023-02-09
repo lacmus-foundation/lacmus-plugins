@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +7,9 @@ using System.Threading.Tasks;
 using LacmusPlugin;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace LacmusYolo5Plugin.Cuda
 {
@@ -27,7 +27,7 @@ namespace LacmusYolo5Plugin.Cuda
 
         public IEnumerable<IObject> Infer(string imagePath, int width, int height)
         {
-            using var image = Image.FromFile(imagePath);
+            using var image = Image.Load<Rgb24>(imagePath);
             var (resized, top, left) = ResizeImage(image); 
             var inputs = new List<NamedOnnxValue>
             {
@@ -56,57 +56,33 @@ namespace LacmusYolo5Plugin.Cuda
             return new InferenceSession(ms.ToArray(), SessionOptions.MakeSessionOptionWithCudaProvider());
         }
         
-        private static (Bitmap, int, int) ResizeImage(Image image)
+        private static (Image<Rgb24>, int, int) ResizeImage(Image<Rgb24> image)
         {
-            PixelFormat format = image.PixelFormat;
-
-            var output = new Bitmap(1984, 1984, format);
-
+            using var output = new Image<Rgb24>(1984, 1984, Color.Gray);
             var (w, h) = (image.Width, image.Height); // image width and height
             var (xRatio, yRatio) = (1984 / (float)w, 1984 / (float)h); // x, y ratios
             var ratio = Math.Min(xRatio, yRatio); // ratio = resized / original
             var (width, height) = ((int)(w * ratio), (int)(h * ratio)); // roi width and height
             var (x, y) = ((1984 / 2) - (width / 2), (1984 / 2) - (height / 2)); // roi x and y coordinates
-            var roi = new Rectangle(x, y, width, height); // region of interest
-
-            using (var graphics = Graphics.FromImage(output))
-            {
-                graphics.Clear(Color.Gray); // clear canvas
-
-                graphics.SmoothingMode = SmoothingMode.None; // no smoothing
-                graphics.InterpolationMode = InterpolationMode.Bilinear; // bilinear interpolation
-                graphics.PixelOffsetMode = PixelOffsetMode.Half; // half pixel offset
-
-                graphics.DrawImage(image, roi); // draw scaled
-            }
+            
+            image.Mutate(i => i.Resize(width, height));
+            output.Mutate(i => i.DrawImage(image, new Point(x, y), 1.0f));
 
             return (output, y, x);
         }
         
-        private static Tensor<float> ExtractPixels(Bitmap bitmap)
+        private static Tensor<float> ExtractPixels(Image<Rgb24> image)
         {
-            var rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-            BitmapData bitmapData = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
-
             var tensor = new DenseTensor<float>(new[] { 1, 1984, 1984, 3});
-
-            unsafe // speed up conversion by direct work with memory
-            {
-                Parallel.For(0, bitmapData.Height, (y) =>
+            const float scale = 1 / 255.0f;
+            
+            _ = Parallel.For(0, image.Height, y =>
+                Parallel.For(0, image.Width, x =>
                 {
-                    var row = (byte*)bitmapData.Scan0 + (y * bitmapData.Stride);
-
-                    Parallel.For(0, bitmapData.Width, (x) =>
-                    {
-                        tensor[0, y, x, 0] = row[x * bytesPerPixel + 2] / 255.0F; // r
-                        tensor[0, y, x, 1] = row[x * bytesPerPixel + 1] / 255.0F; // g
-                        tensor[0, y, x, 2] = row[x * bytesPerPixel + 0] / 255.0F; // b
-                    });
-                });
-
-                bitmap.UnlockBits(bitmapData);
-            }
+                    tensor[0, y, x, 0] = image[x, y].R * scale; // r
+                    tensor[0, y, x, 1] = image[x, y].G * scale; // g
+                    tensor[0, y, x, 2] = image[x, y].B * scale; // b
+                }));
 
             return tensor;
         }
