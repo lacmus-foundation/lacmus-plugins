@@ -13,7 +13,7 @@ namespace LacmusYolo5Plugin
         public string Company => "Lacmus Foundation";
         public string Url => "https://github.com/lacmus-foundation/lacmus-research";
         public IEnumerable<string> Dependences => new[] {"(windows) microsoft visual c++ redistributable >= 2019"};
-        public Version Version => new Version(api: 2, major: 1, minor: 1);
+        public Version Version => new Version(api: 2, major: 2, minor: 0);
         public InferenceType InferenceType => InferenceType.Cpu;
         public HashSet<OperatingSystem> OperatingSystems => new HashSet<OperatingSystem>()
         {

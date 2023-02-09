@@ -1,15 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>LacmusYolo5Plugin.DirectML</AssemblyName>
         <RootNamespace>LacmusYolo5Plugin.DirectML</RootNamespace>
         <LangVersion>9</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="ModelWeights\frozen_inference_graph.pb" />
-        <EmbeddedResource Include="ModelWeights\frozen_inference_graph.pb" />
+        <None Remove="ModelWeights\frozen_inference_graph.onnx" />
+        <EmbeddedResource Include="ModelWeights\frozen_inference_graph.onnx" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="LacmusPlugin.Natives.TensorFlow.DirectML" Version="1.15.4" />
-        <PackageReference Include="TensorFlow.NET" Version="0.20.1" />
+      <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.13.1" />
+      <PackageReference Include="System.Drawing.Common" Version="5.0.1" />
     </ItemGroup>
 </Project>
